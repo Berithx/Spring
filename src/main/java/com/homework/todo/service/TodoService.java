@@ -27,8 +27,8 @@ public class TodoService {
         return todoResponseDto;
     }
 
-//    public List<TodoResponseDto> getTodoByDate(String date) {
-//        // DB 조회
-//        return todoRepository.findAllByDateContaining(date).stream().map(TodoResponseDto::new).toList();
-//    }
+    public List<TodoResponseDto> getTodoById(Long id) {
+        // DB 조회
+        return todoRepository.findAllById(id).stream().map(TodoResponseDto::new).toList();
+    }
 }

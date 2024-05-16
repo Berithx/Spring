@@ -21,9 +21,8 @@ public class TodoController {
         return todoService.createTodo(requestDto);
     }
 
-//    @GetMapping("/todo/date")
-//    public List<TodoResponseDto> getTodoByDate(@RequestParam String date) {
-//        return todoService.getTodoByDate(date);
-//    }
-
+    @GetMapping("/todo/query")
+    public List<TodoResponseDto> getTodoByDate(@RequestParam Long id) {
+        return todoService.getTodoById(id);
+    }
 }

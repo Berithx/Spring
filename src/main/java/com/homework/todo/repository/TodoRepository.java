@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface TodoRepository extends JpaRepository<Todo, Long> {
 
-//    List<Todo> findAllByDateContaining(String date);
+    List<Todo> findAllById(Long id);
 }
