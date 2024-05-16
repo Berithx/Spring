@@ -1,7 +1,6 @@
 package com.homework.todo.entity;
 
 import com.homework.todo.dto.TodoRequestDto;
-import com.homework.todo.dto.TodoResponseDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,15 +19,21 @@ public class Todo extends Date{
     private String title;
     @Column(name = "contents", nullable = false, length = 500)
     private String contents;
-    @Column(name = "manager", nullable = false)
-    private String manager;
+    @Column(name = "user", nullable = false)
+    private String user;
     @Column(name = "password", nullable = false)
     private String password;
 
     public Todo(TodoRequestDto todoRequestDto) {
         this.title = todoRequestDto.getTitle();
         this.contents = todoRequestDto.getContents();
-        this.manager = todoRequestDto.getManager();
+        this.user = todoRequestDto.getUser();
         this.password = todoRequestDto.getPassword();
+    }
+
+    public void update(TodoRequestDto todoRequestDto) {
+        this.title = todoRequestDto.getTitle();
+        this.contents = todoRequestDto.getContents();
+        this.user = todoRequestDto.getUser();
     }
 }

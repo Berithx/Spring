@@ -6,6 +6,6 @@ import lombok.Getter;
 public class TodoRequestDto {
     private String title;
     private String contents;
-    private String manager;
+    private String user;
     private String password;
 }

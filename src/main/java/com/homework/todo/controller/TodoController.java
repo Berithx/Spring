@@ -22,12 +22,17 @@ public class TodoController {
     }
 
     @GetMapping("/todo/query")
-    public List<TodoResponseDto> getTodoByDate(@RequestParam Long id) {
+    public TodoResponseDto getTodoById(@RequestParam Long id) {
         return todoService.getTodoById(id);
     }
 
     @GetMapping("/todo")
     public List<TodoResponseDto> getTodo() {
         return todoService.getTodo();
+    }
+
+    @PutMapping("/todo/{id}")
+    public Long updateTodo(@PathVariable Long id, @RequestBody TodoRequestDto todoRequestDto) {
+        return todoService.updateTodo(id, todoRequestDto);
     }
 }
