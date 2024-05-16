@@ -2,6 +2,7 @@ package com.homework.todo.controller;
 
 import com.homework.todo.dto.TodoRequestDto;
 import com.homework.todo.dto.TodoResponseDto;
+import com.homework.todo.entity.Todo;
 import com.homework.todo.service.TodoService;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +33,7 @@ public class TodoController {
     }
 
     @PutMapping("/todo/{id}")
-    public Long updateTodo(@PathVariable Long id, @RequestBody TodoRequestDto todoRequestDto) {
+    public Todo updateTodo(@PathVariable Long id, @RequestBody TodoRequestDto todoRequestDto) {
         return todoService.updateTodo(id, todoRequestDto);
     }
 }

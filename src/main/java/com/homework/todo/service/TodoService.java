@@ -45,7 +45,7 @@ public class TodoService {
 
     // DB 특정 데이터 수정
     @Transactional
-    public Long updateTodo(Long id, TodoRequestDto todoRequestDto) {
+    public Todo updateTodo(Long id, TodoRequestDto todoRequestDto) {
         Todo todo = findForUpdateTodoById(id);
         if (todo.getPassword().equals(todoRequestDto.getPassword())) {
             todo.update(todoRequestDto);
@@ -53,7 +53,7 @@ public class TodoService {
             System.out.println("비밀번호가 일치하지 않습니다.");
         }
 
-        return id;
+        return todo;
     }
 
     /**
