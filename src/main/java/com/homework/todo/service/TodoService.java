@@ -31,4 +31,8 @@ public class TodoService {
         // DB 조회
         return todoRepository.findAllById(id).stream().map(TodoResponseDto::new).toList();
     }
+
+    public List<TodoResponseDto> getTodo() {
+        return todoRepository.findAllByOrderByDateDesc().stream().map(TodoResponseDto::new).toList();
+    }
 }
