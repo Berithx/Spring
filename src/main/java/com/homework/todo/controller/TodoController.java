@@ -7,6 +7,7 @@ import com.homework.todo.service.TodoService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -33,7 +34,12 @@ public class TodoController {
     }
 
     @PutMapping("/todo/{id}")
-    public Todo updateTodo(@PathVariable Long id, @RequestBody TodoRequestDto todoRequestDto) {
-        return todoService.updateTodo(id, todoRequestDto);
+    public Optional<TodoResponseDto> updateTodo(@PathVariable Long id, @RequestBody TodoRequestDto requestDto) {
+        return todoService.updateTodo(id, requestDto);
+    }
+
+    @DeleteMapping("/todo/{id}")
+    public void deleteTodo(@PathVariable Long id, @RequestBody TodoRequestDto requestDto) {
+        todoService.deleteTodo(id, requestDto);
     }
 }

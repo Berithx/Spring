@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class TodoService {
@@ -45,15 +46,26 @@ public class TodoService {
 
     // DB 특정 데이터 수정
     @Transactional
-    public Todo updateTodo(Long id, TodoRequestDto todoRequestDto) {
-        Todo todo = findForUpdateTodoById(id);
-        if (todo.getPassword().equals(todoRequestDto.getPassword())) {
-            todo.update(todoRequestDto);
+    public Optional<TodoResponseDto> updateTodo(Long id, TodoRequestDto RequestDto) {
+        Todo todo = findForEditTodoById(id);
+        if (todo.getPassword().equals(RequestDto.getPassword())) {
+            todo.update(RequestDto);
+            TodoResponseDto responseDto = new TodoResponseDto(todo);
+            return Optional.of(responseDto);
+        } else {
+            System.out.println("비밀번호가 일치하지 않습니다.");
+            return Optional.empty();
+        }
+    }
+
+    public void deleteTodo(Long id, TodoRequestDto requestDto) {
+        Todo todo = findForEditTodoById(id);
+        if (todo.getPassword().equals(requestDto.getPassword())) {
+            todoRepository.delete(todo);
+            System.out.println("정상 처리되었습니다.");
         } else {
             System.out.println("비밀번호가 일치하지 않습니다.");
         }
-
-        return todo;
     }
 
     /**
@@ -71,7 +83,7 @@ public class TodoService {
      * @param id
      * @return update용 Todo 객체
      */
-    private Todo findForUpdateTodoById(Long id) {
+    private Todo findForEditTodoById(Long id) {
         return todoRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 일정이 존재하지 않습니다.")
         );
