@@ -33,13 +33,13 @@ public class TodoController {
         return todoService.getTodo();
     }
 
-    @PutMapping("/todo/{id}")
-    public Optional<TodoResponseDto> updateTodo(@PathVariable Long id, @RequestBody TodoRequestDto requestDto) {
+    @PutMapping("/todo")
+    public Optional<TodoResponseDto> updateTodo(@RequestParam Long id, @RequestBody TodoRequestDto requestDto) {
         return todoService.updateTodo(id, requestDto);
     }
 
-    @DeleteMapping("/todo/{id}")
-    public void deleteTodo(@PathVariable Long id, @RequestBody TodoRequestDto requestDto) {
+    @DeleteMapping("/todo")
+    public void deleteTodo(@RequestParam Long id, @RequestBody TodoRequestDto requestDto) {
         todoService.deleteTodo(id, requestDto);
     }
 }
