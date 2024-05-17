@@ -7,12 +7,14 @@ import java.time.LocalDate;
 
 @Getter
 public class TodoResponseDto {
+    private Long id;
     private String title;
     private String contents;
     private String user;
     private LocalDate created_At;
 
     public TodoResponseDto(Todo todo) {
+        this.id = todo.getId();
         this.title = todo.getTitle();
         this.contents = todo.getContents();
         this.user = todo.getUser();

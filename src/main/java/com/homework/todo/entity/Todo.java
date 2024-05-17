@@ -15,13 +15,13 @@ public class Todo extends Date{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, length = 100)
     private String title;
     @Column(name = "contents", nullable = false, length = 500)
     private String contents;
-    @Column(name = "user", nullable = false)
+    @Column(name = "user", nullable = false, length = 20)
     private String user;
-    @Column(name = "password", nullable = false)
+    @Column(name = "password", nullable = false, length = 20)
     private String password;
 
     public Todo(TodoRequestDto todoRequestDto) {
