@@ -2,6 +2,9 @@ package com.homework.todo.entity;
 
 import com.homework.todo.dto.TodoRequestDto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,12 +20,16 @@ public class Todo extends Date{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "title", nullable = false, length = 100)
+
+    @Column(name = "title", nullable = false, length = 200)
     private String title;
+
     @Column(name = "contents", nullable = false, length = 500)
     private String contents;
-    @Column(name = "user", nullable = false, length = 20)
+
+    @Column(name = "user", nullable = false, length = 50)
     private String user;
+
     @Column(name = "password", nullable = false, length = 20)
     private String password;
 

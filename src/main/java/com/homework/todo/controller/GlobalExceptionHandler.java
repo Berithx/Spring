@@ -3,15 +3,16 @@ package com.homework.todo.controller;
 import org.hibernate.PropertyValueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -33,6 +34,21 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    // 작성, 수정 API 대응
+    // RequestBody를 통해 전달된 데이터의 필수여부 유효성 검사 결과에 따른 예외처리
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException ex) {
+        BindingResult bindingResult = ex.getBindingResult();
+        Map<String, String> validatorResult = new HashMap<>();
+
+        for (FieldError error : bindingResult.getFieldErrors()) {
+            String validKeyName = error.getField();
+            validatorResult.put(validKeyName, error.getDefaultMessage());
+        }
+
+        return new ResponseEntity<>(validatorResult, HttpStatus.BAD_REQUEST);
+    }
+
     /**
      * 단일 조회, 수정, 삭제 객체 API 대응
      * RequestParam 을 통하여 전달된 ID 값이 Long 타입 외 입력인 경우 예외처리
@@ -50,41 +66,5 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<String> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
         return new ResponseEntity<>(ex.getParameterName() + "에 공백이 입력되었습니다. 확인 후 재요청해주시기 바랍니다.", HttpStatus.BAD_REQUEST);
-    }
-
-    /**
-     * POST,  API 대응
-     * List nullField 에 null 필드 정보 저장 후 Message 로 변환하여 리턴
-     * RequestDtd 객체에 담긴 데이터 중 하나의 필드라도 Null인 경우 예외처리
-     */
-    @ExceptionHandler(PropertyValueException.class)
-    public ResponseEntity<String> handlePropertyValueException(PropertyValueException ex) {
-        List<String> nullField = findNullFields(ex);
-        String errorMessage = generateErrorMessage(nullField);
-        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
-    }
-
-    /**
-     * handlePropertyValueException Method 대응
-     * 발생한 Exception 객체의 null 필드를 List에 담아 null check
-     */
-    private List<String> findNullFields(PropertyValueException ex) {
-        List<String> nullFields = new ArrayList<>();
-
-        nullFields.add(ex.getPropertyName());
-        return nullFields;
-    }
-
-    /**
-     * findNullFields Method 대응
-     * List 로 변환된 Null 필드 데이터를 Message 로 변환
-     */
-    private String generateErrorMessage(List<String> nullFields) {
-        StringBuilder errorMessage = new StringBuilder("다음 필수 필드가 null입니다 : ");
-        for(String field : nullFields) {
-            errorMessage.append(field).append(", ");
-        }
-        errorMessage.delete(errorMessage.length() - 2, errorMessage.length());
-        return errorMessage.toString();
     }
 }

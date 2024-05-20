@@ -1,13 +1,18 @@
 package com.homework.todo.service;
 
+import com.homework.todo.dto.TodoDeleteDto;
 import com.homework.todo.dto.TodoRequestDto;
 import com.homework.todo.dto.TodoResponseDto;
 import com.homework.todo.entity.Todo;
 import com.homework.todo.repository.TodoRepository;
+import jakarta.validation.constraints.Email;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.FieldError;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Service
@@ -49,10 +54,11 @@ public class TodoService {
     }
 
     @Transactional(readOnly = false)
-    public void deleteTodo(Long id, TodoRequestDto requestDto) {
+    public Long deleteTodo(Long id, TodoDeleteDto deleteDto) {
         Todo todo = findTodoById(id);
-        todo.checkPassword(requestDto.getPassword());
+        todo.checkPassword(deleteDto.getPassword());
         todoRepository.delete(todo);
+        return todo.getId();
     }
 
     /**

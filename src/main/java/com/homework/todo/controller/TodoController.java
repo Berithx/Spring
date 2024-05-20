@@ -1,9 +1,12 @@
 package com.homework.todo.controller;
 
+import com.homework.todo.dto.TodoDeleteDto;
 import com.homework.todo.dto.TodoRequestDto;
 import com.homework.todo.dto.TodoResponseDto;
 import com.homework.todo.service.TodoService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +23,12 @@ public class TodoController {
     }
 
     @PostMapping
-    public TodoResponseDto createTodo(@RequestBody TodoRequestDto requestDto) {
+    public TodoResponseDto createTodo(@Valid @RequestBody TodoRequestDto requestDto) {
         return todoService.createTodo(requestDto);
     }
 
     @GetMapping("/query")
-    public TodoResponseDto getTodoById(@Valid @RequestParam(value = "id") @NotNull Long id) {
+    public TodoResponseDto getTodoById(@RequestParam @NotNull Long id) {
         return todoService.getTodoById(id);
     }
 
@@ -35,12 +38,12 @@ public class TodoController {
     }
 
     @PutMapping
-    public TodoResponseDto updateTodo(@Valid @RequestParam @Size(min = 1) @NotNull Long id, @RequestBody TodoRequestDto requestDto) {
+    public TodoResponseDto updateTodo(@RequestParam Long id, @Valid @RequestBody TodoRequestDto requestDto) {
         return todoService.updateTodo(id, requestDto);
     }
 
     @DeleteMapping
-    public void deleteTodo(@Valid @RequestParam() @Size(min = 1) @NotNull Long id, @RequestBody TodoRequestDto requestDto) {
-        todoService.deleteTodo(id, requestDto);
+    public Long deleteTodo(@RequestParam() @NotNull Long id, @Valid @RequestBody TodoDeleteDto deleteDto) {
+        return todoService.deleteTodo(id, deleteDto);
     }
 }
