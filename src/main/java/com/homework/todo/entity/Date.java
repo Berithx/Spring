@@ -14,5 +14,5 @@ public abstract class Date {
     @CreatedDate
     @Column(updatable = false)
     @Temporal(TemporalType.DATE)
-    private LocalDate date;
+    private LocalDate createdAt;
 }

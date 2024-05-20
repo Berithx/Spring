@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.security.InvalidParameterException;
+
 @Entity
 @Getter
 @Setter
@@ -35,5 +37,11 @@ public class Todo extends Date{
         this.title = todoRequestDto.getTitle();
         this.contents = todoRequestDto.getContents();
         this.user = todoRequestDto.getUser();
+    }
+
+    public void checkPassword(String requestDtoPassword) {
+        if(!this.password.equals(requestDtoPassword)) {
+            throw new InvalidParameterException("비밀번호가 일치하지 않습니다.");
+        }
     }
 }
