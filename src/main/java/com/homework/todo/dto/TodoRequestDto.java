@@ -10,10 +10,10 @@ public class TodoRequestDto {
     @Length (max = 200, groups = {ValidationGroups.Create.class, ValidationGroups.Update.class})
     private String title;
 
-    @NotBlank(message = "내용은 필수 입력 값입니다.", groups = {ValidationGroups.Create.class, ValidationGroups.Update.class})
+    @Length(max = 500, groups = {ValidationGroups.Create.class, ValidationGroups.Update.class})
     private String contents;
 
-    @NotBlank(message = "내용은 필수 입력 값입니다.", groups = {ValidationGroups.Create.class, ValidationGroups.Update.class})
+    @NotBlank(message = "유저는 공백일 수 없습니다.", groups = {ValidationGroups.Create.class, ValidationGroups.Update.class})
     @Email(message = "이메일 형식에 맞지 않습니다.", groups = {ValidationGroups.Create.class, ValidationGroups.Update.class})
     private String user;
 

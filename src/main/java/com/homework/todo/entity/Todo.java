@@ -21,10 +21,10 @@ public class Todo extends Date{
     @Column(name = "title", nullable = false, length = 200)
     private String title;
 
-    @Column(name = "contents", nullable = false, length = 500)
+    @Column(name = "contents", length = 500)
     private String contents;
 
-    @Column(name = "user", nullable = false, length = 50)
+    @Column(name = "user", length = 50)
     private String user;
 
     @Column(name = "password", nullable = false, length = 20)
@@ -38,9 +38,15 @@ public class Todo extends Date{
     }
 
     public void update(TodoRequestDto todoRequestDto) {
-        this.title = todoRequestDto.getTitle();
-        this.contents = todoRequestDto.getContents();
-        this.user = todoRequestDto.getUser();
+        if (todoRequestDto.getTitle() != null) {
+            this.title = todoRequestDto.getTitle();
+        }
+        if (todoRequestDto.getContents() != null) {
+            this.contents = todoRequestDto.getContents();
+        }
+        if (todoRequestDto.getUser() != null) {
+            this.user = todoRequestDto.getUser();
+        }
     }
 
     public void checkPassword(String requestDtoPassword) {
