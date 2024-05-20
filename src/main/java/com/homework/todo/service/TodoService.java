@@ -1,6 +1,5 @@
 package com.homework.todo.service;
 
-import com.homework.todo.dto.TodoDeleteDto;
 import com.homework.todo.dto.TodoRequestDto;
 import com.homework.todo.dto.TodoResponseDto;
 import com.homework.todo.entity.Todo;
@@ -25,8 +24,7 @@ public class TodoService {
 
         Todo saveTodo = todoRepository.save(todo);
 
-        TodoResponseDto todoResponseDto = new TodoResponseDto(todo);
-        return todoResponseDto;
+        return new TodoResponseDto(todo);
     }
 
     @Transactional(readOnly = true)
@@ -45,16 +43,14 @@ public class TodoService {
         Todo todo = findTodoById(id);
         todo.checkPassword(requestDto.getPassword());
         todo.update(requestDto);
-        TodoResponseDto responseDto = new TodoResponseDto(todo);
-        return responseDto;
+        return new TodoResponseDto(todo);
     }
 
     @Transactional(readOnly = false)
-    public Long deleteTodo(Long id, TodoDeleteDto deleteDto) {
+    public void deleteTodo(Long id, TodoRequestDto requestDto) {
         Todo todo = findTodoById(id);
-        todo.checkPassword(deleteDto.getPassword());
+        todo.checkPassword(requestDto.getPassword());
         todoRepository.delete(todo);
-        return todo.getId();
     }
 
     /**
@@ -63,7 +59,7 @@ public class TodoService {
      * @return 단일 객체 Get
      */
     private Todo findTodoById(Long id) {
-        Todo todo = todoRepository.findById(id).orElseThrow(() -> new NoSuchElementException("선택한 일정이 존재하지 않습니다."));
+        Todo todo = todoRepository.findById(id).orElseThrow(() -> new NoSuchElementException("선택한 정보가 존재하지 않습니다."));
         return todo;
     }
 }

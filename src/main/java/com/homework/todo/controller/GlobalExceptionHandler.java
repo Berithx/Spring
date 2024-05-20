@@ -1,5 +1,6 @@
 package com.homework.todo.controller;
 
+import jakarta.validation.ConstraintViolation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -14,6 +15,7 @@ import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -36,7 +38,7 @@ public class GlobalExceptionHandler {
     }
 
     // 작성, 수정 API 대응
-    // RequestBody를 통해 전달된 데이터의 필수여부 유효성 검사 결과에 따른 예외처리
+    // RequestBody 를 통해 전달된 데이터의 필수여부 유효성 검사 결과에 따른 예외처리
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
@@ -58,6 +60,23 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
         String errorMessage = String.format("입력된 '%s'의 값 '%s'은(는) 정수가 아닙니다. 정수로 입력해주시기 바랍니다..", ex.getName(), ex.getValue());
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    /*
+     * 단일 조회, 수정, 삭제 API 대응
+     * RequestParam 을 통하여 전달된 ID가 양수가 아닐 경우 예외처리
+     */
+    @ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
+    public ResponseEntity<?> handleConstraintViolationException(jakarta.validation.ConstraintViolationException ex) {
+        Set<ConstraintViolation<?>> violations = ex.getConstraintViolations();
+
+        StringBuilder errorMessage = new StringBuilder();
+        for (ConstraintViolation<?> violation : violations) {
+            String parameterName = violation.getPropertyPath().toString();
+            errorMessage.append(parameterName).append(": ").append(violation.getMessage());
+        }
+
+        return new ResponseEntity<>(errorMessage.toString(), HttpStatus.BAD_REQUEST);
     }
 
     /**
