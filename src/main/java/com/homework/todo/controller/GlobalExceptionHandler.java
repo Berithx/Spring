@@ -66,6 +66,6 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<String> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
-        return new ResponseEntity<>(ex.getParameterName() + "에 공백이 입력되었습니다. 확인 후 재요청해주시기 바랍니다.", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ex.getParameterName() + "이(가) 입력되지 않았습니다. 확인 후 재요청해주시기 바랍니다.", HttpStatus.BAD_REQUEST);
     }
 }
