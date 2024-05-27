@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,6 +31,9 @@ public class Todo extends Date{
 
     @Column(name = "password", nullable = false, length = 20)
     private String password;
+
+    @OneToMany(mappedBy = "todo")
+    private List<Comment> commentList = new ArrayList<>();
 
     public Todo(TodoRequestDto todoRequestDto) {
         this.title = todoRequestDto.getTitle();
