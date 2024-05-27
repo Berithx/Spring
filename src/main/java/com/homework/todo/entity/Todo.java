@@ -26,19 +26,16 @@ public class Todo extends Date{
     @Column(name = "contents", length = 500)
     private String contents;
 
-    @Column(name = "user", length = 50)
-    private String user;
+    @Column(name = "username", length = 50)
+    private String username;
 
     @Column(name = "password", nullable = false, length = 20)
     private String password;
 
-    @OneToMany(mappedBy = "todo")
-    private List<Comment> commentList = new ArrayList<>();
-
     public Todo(TodoRequestDto todoRequestDto) {
         this.title = todoRequestDto.getTitle();
         this.contents = todoRequestDto.getContents();
-        this.user = todoRequestDto.getUser();
+        this.username = todoRequestDto.getUsername();
         this.password = todoRequestDto.getPassword();
     }
 
@@ -49,8 +46,8 @@ public class Todo extends Date{
         if (todoRequestDto.getContents() != null) {
             this.contents = todoRequestDto.getContents();
         }
-        if (todoRequestDto.getUser() != null) {
-            this.user = todoRequestDto.getUser();
+        if (todoRequestDto.getUsername() != null) {
+            this.username = todoRequestDto.getUsername();
         }
     }
 

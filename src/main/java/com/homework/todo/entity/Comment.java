@@ -1,5 +1,6 @@
 package com.homework.todo.entity;
 
+import com.homework.todo.dto.CommentRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,13 +16,18 @@ public class Comment extends Date {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "contents", nullable = false, length = 500)
+    @Column(name = "comment", nullable = false, length = 500)
     private String comment;
 
     @Column(name = "username", nullable = false, length = 50)
     private String username;
 
-    @ManyToOne
-    @JoinColumn(name = "todo_id", nullable = false)
-    private Todo todo;
+    @Column(name = "todoId", nullable = false)
+    private Long todoId;
+
+    public Comment(Long todoId, CommentRequestDto requestDto) {
+        this.todoId = todoId;
+        this.comment = requestDto.getComment();
+        this.username = requestDto.getUsername();
+    }
 }

@@ -87,4 +87,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
         return new ResponseEntity<>(ex.getParameterName() + "이(가) 입력되지 않았습니다. 확인 후 재요청해주시기 바랍니다.", HttpStatus.BAD_REQUEST);
     }
+
+    /**
+     * Null 입력에 대한 대응
+     * 현재 적용위치 : commentController
+     */
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<String> hangleNullPointerException(NullPointerException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

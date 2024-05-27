@@ -62,4 +62,8 @@ public class TodoService {
         Todo todo = todoRepository.findById(id).orElseThrow(() -> new NoSuchElementException("선택한 정보가 존재하지 않습니다."));
         return todo;
     }
+
+    public boolean existsById(Long id) {
+        return todoRepository.existsById(id);
+    }
 }
