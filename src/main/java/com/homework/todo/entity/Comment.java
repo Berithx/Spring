@@ -30,4 +30,8 @@ public class Comment extends Date {
         this.comment = requestDto.getComment();
         this.username = requestDto.getUsername();
     }
+
+    public void update(CommentRequestDto requestDto) {
+        this.comment = requestDto.getComment();
+    }
 }

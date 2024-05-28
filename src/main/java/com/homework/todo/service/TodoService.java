@@ -59,11 +59,13 @@ public class TodoService {
      * @return 단일 객체 Get
      */
     private Todo findTodoById(Long id) {
-        Todo todo = todoRepository.findById(id).orElseThrow(() -> new NoSuchElementException("선택한 정보가 존재하지 않습니다."));
+        Todo todo = todoRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("존재하지 않는 일정입니다.")
+        );
         return todo;
     }
 
-    public boolean existsById(Long id) {
+    protected boolean existsById(Long id) {
         return todoRepository.existsById(id);
     }
 }

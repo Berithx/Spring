@@ -27,9 +27,9 @@ public class TodoController {
         return todoService.createTodo(requestDto);
     }
 
-    @GetMapping("/query")
-    public TodoResponseDto getTodoById(@Validated @RequestParam @Positive Long id) {
-        return todoService.getTodoById(id);
+    @GetMapping(value = {"/query/{id}", "/query", "/query/"})
+    public TodoResponseDto getTodoById(@Validated @PathVariable @Positive Long id) {
+            return todoService.getTodoById(id);
     }
 
     @GetMapping
@@ -37,14 +37,14 @@ public class TodoController {
         return todoService.getTodo();
     }
 
-    @PutMapping
+    @PutMapping()
     public TodoResponseDto updateTodo(@Validated @RequestParam @Positive Long id, @Validated(ValidationGroups.Update.class) @RequestBody TodoRequestDto requestDto) {
-        return todoService.updateTodo(id, requestDto);
+            return todoService.updateTodo(id, requestDto);
     }
 
     @DeleteMapping
     public ResponseEntity<String> deleteTodo(@Validated @RequestParam @Positive Long id, @Validated(ValidationGroups.Delete.class) @RequestBody TodoRequestDto requestDto) {
-        todoService.deleteTodo(id, requestDto);
-        return ResponseEntity.ok("정상 삭제 처리되었습니다.");
+            todoService.deleteTodo(id, requestDto);
+            return ResponseEntity.ok("정상 삭제 처리되었습니다.");
     }
 }
