@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.security.InvalidParameterException;
+
 @Entity
 @Getter
 @Setter
@@ -33,5 +35,11 @@ public class User extends Date {
         this.nickname = nickname;
         this.password = password;
         this.role = role;
+    }
+
+    public void checkPassword(String Password) {
+        if(!this.password.equals(Password)) {
+            throw new InvalidParameterException("비밀번호가 일치하지 않습니다.");
+        }
     }
 }

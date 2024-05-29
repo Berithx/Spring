@@ -1,21 +1,22 @@
 package com.homework.todo.service;
 
+import com.homework.todo.dto.LoginRequestDto;
 import com.homework.todo.dto.SignupRequestDto;
 import com.homework.todo.entity.User;
 import com.homework.todo.entity.UserRoleEnum;
+import com.homework.todo.jwt.JwtUtil;
 import com.homework.todo.repository.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
 
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
@@ -38,5 +39,19 @@ public class UserService {
 
         User user = new User(username, requestDto.getNickname(), requestDto.getPassword(), role);
         userRepository.save(user);
+    }
+
+    public void login(LoginRequestDto requestDto, HttpServletResponse res) {
+        String username = requestDto.getUsername();
+        String password = requestDto.getPassword();
+
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("등록된 사용자가 아닙니다.")
+        );
+
+        user.checkPassword(password);
+
+        String token = jwtUtil.createToken(user.getUsername(), user.getRole());
+        jwtUtil.addJwtCookie(token, res);
     }
 }
