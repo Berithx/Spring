@@ -37,9 +37,7 @@ public class User extends Date {
         this.role = role;
     }
 
-    public void checkPassword(String Password) {
-        if(!this.password.equals(Password)) {
-            throw new InvalidParameterException("비밀번호가 일치하지 않습니다.");
-        }
+    public boolean checkPassword(String Password) {
+        return this.password.equals(Password);
     }
 }

@@ -26,7 +26,7 @@ public class UserService {
 
         Optional<User> checkUsername = userRepository.findByUsername(username);
         if (checkUsername.isPresent()) {
-            throw new IllegalArgumentException("중복된 사용자가 존재합니다");
+            throw new IllegalArgumentException("중복된 username 입니다");
         }
 
         UserRoleEnum role = UserRoleEnum.USER;
@@ -41,17 +41,14 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void login(LoginRequestDto requestDto, HttpServletResponse res) {
-        String username = requestDto.getUsername();
-        String password = requestDto.getPassword();
+    public boolean verifyUser(LoginRequestDto requestDto) {
+        User user = findByUsername(requestDto.getUsername());
+        return user != null && user.checkPassword(requestDto.getPassword());
+    }
 
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("등록된 사용자가 아닙니다.")
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("회원을 찾을 수 없습니다.")
         );
-
-        user.checkPassword(password);
-
-        String token = jwtUtil.createToken(user.getUsername(), user.getRole());
-        jwtUtil.addJwtCookie(token, res);
     }
 }
