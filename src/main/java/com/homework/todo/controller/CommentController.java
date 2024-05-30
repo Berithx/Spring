@@ -4,7 +4,6 @@ import com.homework.todo.dto.CommentRequestDto;
 import com.homework.todo.dto.CommentResponseDto;
 import com.homework.todo.dto.ValidationGroups;
 import com.homework.todo.service.CommentService;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

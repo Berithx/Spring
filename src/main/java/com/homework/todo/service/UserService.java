@@ -6,7 +6,6 @@ import com.homework.todo.entity.User;
 import com.homework.todo.entity.UserRoleEnum;
 import com.homework.todo.jwt.JwtUtil;
 import com.homework.todo.repository.UserRepository;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -36,7 +36,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
             log.info("화이트리스트가 아닙니다. 토큰 보유여부 확인");
             if (!isContainToken(request)) {
-                response.sendError(HttpStatus.UNAUTHORIZED.value(), "isContainToken 에러");
+                exceptionHandler.handleException(response, HttpStatus.UNAUTHORIZED, "로그인 후 이용해주시기 바랍니다.");
                 return;
             }
 

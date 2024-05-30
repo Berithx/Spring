@@ -1,9 +1,7 @@
 package com.homework.todo.controller;
 
-import com.homework.todo.dto.LoginRequestDto;
 import com.homework.todo.dto.SignupRequestDto;
 import com.homework.todo.service.UserService;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
