@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -65,5 +66,9 @@ public class CommentService {
 
     private Comment findCommentById(Long todoId, Long commentId) {
         return commentRepository.findAllByIdAndTodoId(commentId, todoId);
+    }
+
+    public String findCommentUsernameById(Long todoId, Long commentId) {
+        return commentRepository.findAllByIdAndTodoId(todoId, commentId).getUsername();
     }
 }

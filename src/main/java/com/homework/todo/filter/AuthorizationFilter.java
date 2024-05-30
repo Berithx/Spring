@@ -2,6 +2,7 @@ package com.homework.todo.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homework.todo.jwt.JwtUtil;
+import com.homework.todo.service.CommentService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -16,6 +17,7 @@ import org.springframework.util.PatternMatchUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @Slf4j(topic = "JWT 검증 및 인가")
 @RequiredArgsConstructor
@@ -23,6 +25,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
     private final String[] whiteList = new String[] {"/user/signup", "/user/login"};
 
     private final JwtUtil jwtUtil;
+    private final CommentService commentService;
     private final FilterExceptionHandler exceptionHandler = new FilterExceptionHandler(new ObjectMapper());
 
     @Override
@@ -36,7 +39,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
             log.info("화이트리스트가 아닙니다. 토큰 보유여부 확인");
             if (!isContainToken(request)) {
-                exceptionHandler.handleException(response, HttpStatus.UNAUTHORIZED, "로그인 후 이용해주시기 바랍니다.");
+                exceptionHandler.handleException(response, HttpStatus.BAD_REQUEST, "토큰이 유효하지 않습니다.");
                 return;
             }
 
@@ -45,10 +48,24 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             log.info("헤더의 토큰 가져오기");
             if (jwtUtil.validateToken(token)) {
                 log.info("토큰 검증 완료");
-                chain.doFilter(request, response);
             } else {
-                exceptionHandler.handleException(response, HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다.");
+                exceptionHandler.handleException(response, HttpStatus.BAD_REQUEST, "토큰이 유효하지 않습니다.");
             }
+
+            // 수정, 삭제 권한 확인
+            if (request.getMethod().equals("PUT") || request.getMethod().equals("DELETE")) {
+                String tokenUsername = jwtUtil.getUserInfoFromToken(token).getSubject();
+                String[] uriParts = request.getRequestURI().split("/");
+                Long todoId = Long.parseLong(uriParts[uriParts.length - 3]);
+                Long commentId = Long.parseLong(uriParts[uriParts.length -1]);
+                String commentUsername = commentService.findCommentUsernameById(todoId, commentId);
+
+                if (!tokenUsername.equals(commentUsername)) {
+                    exceptionHandler.handleException(response, HttpStatus.BAD_REQUEST, "작성자만 삭제/수정할 수 있습니다.");
+                    return;
+                }
+            }
+            chain.doFilter(request, response);
         } catch (UnsupportedJwtException | MalformedJwtException | io.jsonwebtoken.security.SignatureException e) {
             exceptionHandler.handleException(response, HttpStatus.BAD_REQUEST, "잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
