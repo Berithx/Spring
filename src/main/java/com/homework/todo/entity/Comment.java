@@ -19,17 +19,24 @@ public class Comment extends Date {
     @Column(name = "comment", nullable = false, length = 500)
     private String comment;
 
-    @Column(name = "username", nullable = false, length = 50)
-    private String username;
-
     @ManyToOne
     @JoinColumn(name = "todo_Id", nullable = false)
     private Todo todo;
 
-    public Comment(Todo todo, CommentRequestDto requestDto) {
+    @Column(name = "username", nullable = false, length = 10)
+    private String username;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+
+
+    public Comment(Todo todo, CommentRequestDto requestDto, User user) {
         this.comment = requestDto.getComment();
-        this.username = requestDto.getUsername();
         this.todo = todo;
+        this.user = user;
+        this.username = user.getUsername();
     }
 
     public void update(CommentRequestDto requestDto) {

@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -26,17 +24,18 @@ public class Todo extends Date{
     @Column(name = "contents", length = 500)
     private String contents;
 
-    @Column(name = "username", length = 50)
+    @Column(name = "username")
     private String username;
 
-    @Column(name = "password", nullable = false, length = 20)
-    private String password;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    public Todo(TodoRequestDto todoRequestDto) {
+    public Todo(TodoRequestDto todoRequestDto, User user) {
         this.title = todoRequestDto.getTitle();
         this.contents = todoRequestDto.getContents();
-        this.username = todoRequestDto.getUsername();
-        this.password = todoRequestDto.getPassword();
+        this.username = user.getUsername();
+        this.user = user;
     }
 
     public void update(TodoRequestDto todoRequestDto) {
@@ -46,13 +45,10 @@ public class Todo extends Date{
         if (todoRequestDto.getContents() != null) {
             this.contents = todoRequestDto.getContents();
         }
-        if (todoRequestDto.getUsername() != null) {
-            this.username = todoRequestDto.getUsername();
-        }
     }
 
-    public void checkPassword(String requestDtoPassword) {
-        if(!this.password.equals(requestDtoPassword)) {
+    public void checkPassword(User user) {
+        if(!this.user.getPassword().equals(user.getPassword())) {
             throw new InvalidParameterException("비밀번호가 일치하지 않습니다.");
         }
     }

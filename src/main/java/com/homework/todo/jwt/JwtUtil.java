@@ -25,7 +25,7 @@ public class JwtUtil {
     private String secretKey;
     private Key key;
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-    public static final Logger logger = LoggerFactory.getLogger("JWT 관련 로그");
+    public static final Logger logger = LoggerFactory.getLogger("JwtUtil 로그");
 
     @PostConstruct
     public void init() {
@@ -54,20 +54,23 @@ public class JwtUtil {
         return null;
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token) throws SecurityException, MalformedJwtException, io.jsonwebtoken.security.SignatureException, ExpiredJwtException, UnsupportedJwtException, IllegalArgumentException {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException | io.jsonwebtoken.security.SignatureException e) {
             logger.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
+            throw e;
         } catch (ExpiredJwtException e) {
             logger.error("Expired JWT token, 만료된 JWT token 입니다.");
+            throw e;
         } catch (UnsupportedJwtException e) {
             logger.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
+            throw e;
         } catch (IllegalArgumentException e) {
             logger.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
+            throw e;
         }
-        return false;
     }
 
     public Claims getUserInfoFromToken(String token) {

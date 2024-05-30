@@ -3,7 +3,11 @@ package com.homework.todo.service;
 import com.homework.todo.dto.TodoRequestDto;
 import com.homework.todo.dto.TodoResponseDto;
 import com.homework.todo.entity.Todo;
+import com.homework.todo.entity.User;
+import com.homework.todo.jwt.JwtUtil;
 import com.homework.todo.repository.TodoRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,16 +15,20 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
+@RequiredArgsConstructor
 public class TodoService {
     private final TodoRepository todoRepository;
+    private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-    public TodoService(TodoRepository todoRepository) {
-        this.todoRepository = todoRepository;
-    }
 
     @Transactional(readOnly = false)
-    public TodoResponseDto createTodo(TodoRequestDto requestDto) {
-        Todo todo = new Todo(requestDto);
+    public TodoResponseDto createTodo(TodoRequestDto requestDto, HttpServletRequest request) {
+        String token = jwtUtil.getJwtFromHeader(request);
+
+        User user = userService.findByUsername(jwtUtil.getUserInfoFromToken(token).getSubject());
+
+        Todo todo = new Todo(requestDto, user);
 
         Todo saveTodo = todoRepository.save(todo);
 
@@ -39,17 +47,21 @@ public class TodoService {
     }
 
     @Transactional(readOnly = false)
-    public TodoResponseDto updateTodo(Long id, TodoRequestDto requestDto) {
+    public TodoResponseDto updateTodo(Long id, TodoRequestDto requestDto, HttpServletRequest request) {
+        String token = jwtUtil.getJwtFromHeader(request);
+        User user = userService.findByUsername(jwtUtil.getUserInfoFromToken(token).getSubject());
         Todo todo = findTodoById(id);
-        todo.checkPassword(requestDto.getPassword());
+        todo.checkPassword(user);
         todo.update(requestDto);
         return new TodoResponseDto(todo);
     }
 
     @Transactional(readOnly = false)
-    public void deleteTodo(Long id, TodoRequestDto requestDto) {
+    public void deleteTodo(Long id, TodoRequestDto requestDto, HttpServletRequest request) {
+        String token = jwtUtil.getJwtFromHeader(request);
+        User user = userService.findByUsername(jwtUtil.getUserInfoFromToken(token).getSubject());
         Todo todo = findTodoById(id);
-        todo.checkPassword(requestDto.getPassword());
+        todo.checkPassword(user);
         todoRepository.delete(todo);
     }
 

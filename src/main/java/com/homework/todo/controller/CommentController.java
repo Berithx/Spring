@@ -4,6 +4,7 @@ import com.homework.todo.dto.CommentRequestDto;
 import com.homework.todo.dto.CommentResponseDto;
 import com.homework.todo.dto.ValidationGroups;
 import com.homework.todo.service.CommentService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +22,8 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping({"/query/{todoId}/comments", "/query//comments"})
-    public CommentResponseDto createComment(@PathVariable @Positive Long todoId, @Validated(ValidationGroups.Create.class) @RequestBody CommentRequestDto requestDto) {
-            return commentService.createComment(todoId, requestDto);
+    public CommentResponseDto createComment(@PathVariable @Positive Long todoId, @Validated(ValidationGroups.Create.class) @RequestBody CommentRequestDto requestDto, HttpServletRequest request) {
+            return commentService.createComment(todoId, requestDto, request);
     }
 
     @GetMapping({"/query/{todoId}/comments", "/query//comments"})

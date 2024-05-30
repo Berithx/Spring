@@ -3,6 +3,7 @@ package com.homework.todo.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homework.todo.jwt.JwtUtil;
 import com.homework.todo.service.CommentService;
+import com.homework.todo.service.TodoService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -26,12 +27,13 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final CommentService commentService;
+    private final TodoService todoService;
     private final FilterExceptionHandler exceptionHandler = new FilterExceptionHandler(new ObjectMapper());
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         try {
-            if (whiteListCheck(request.getRequestURI())) {
+            if (whiteListCheck(request.getRequestURI()) || request.getMethod().equals("GET")) {
                 log.info("화이트리스트입니다. 필터를 통과합니다.");
                 chain.doFilter(request, response);
                 return;
@@ -55,16 +57,32 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             // 수정, 삭제 권한 확인
             if (request.getMethod().equals("PUT") || request.getMethod().equals("DELETE")) {
                 String tokenUsername = jwtUtil.getUserInfoFromToken(token).getSubject();
-                String[] uriParts = request.getRequestURI().split("/");
-                Long todoId = Long.parseLong(uriParts[uriParts.length - 3]);
-                Long commentId = Long.parseLong(uriParts[uriParts.length -1]);
-                String commentUsername = commentService.findCommentUsernameById(todoId, commentId);
+                log.info(tokenUsername);
+                // Todo 접근
+                if (request.getRequestURI().equals("/todos")) {
+                    String todoUsername = todoService.getTodoById(Long.valueOf(request.getParameter("id"))).getUsername();
+                    log.info(todoUsername);
+                    if (!tokenUsername.equals(todoUsername)) {
+                        exceptionHandler.handleException(response, HttpStatus.BAD_REQUEST, "작성자만 삭제/수정할 수 있습니다.");
+                        return;
+                    }
+                }
 
-                if (!tokenUsername.equals(commentUsername)) {
-                    exceptionHandler.handleException(response, HttpStatus.BAD_REQUEST, "작성자만 삭제/수정할 수 있습니다.");
-                    return;
+                // Comment 접근
+                if (request.getRequestURI().startsWith("/todos/query")) {
+                    String[] uriParts = request.getRequestURI().split("/");
+
+                    Long todoId = Long.parseLong(uriParts[uriParts.length - 3]);
+                    Long commentId = Long.parseLong(uriParts[uriParts.length -1]);
+                    String commentUsername = commentService.findCommentUsernameById(todoId, commentId);
+                    log.info(commentUsername);
+                    if (!tokenUsername.equals(commentUsername)) {
+                        exceptionHandler.handleException(response, HttpStatus.BAD_REQUEST, "작성자만 삭제/수정할 수 있습니다.");
+                        return;
+                    }
                 }
             }
+
             chain.doFilter(request, response);
         } catch (UnsupportedJwtException | MalformedJwtException | io.jsonwebtoken.security.SignatureException e) {
             exceptionHandler.handleException(response, HttpStatus.BAD_REQUEST, "잘못된 JWT 서명입니다.");

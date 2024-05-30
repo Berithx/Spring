@@ -4,25 +4,32 @@ import com.homework.todo.dto.CommentRequestDto;
 import com.homework.todo.dto.CommentResponseDto;
 import com.homework.todo.entity.Comment;
 import com.homework.todo.entity.Todo;
+import com.homework.todo.entity.User;
+import com.homework.todo.jwt.JwtUtil;
 import com.homework.todo.repository.CommentRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
     private final TodoService todoService;
+    private final UserService userService;
+    private final JwtUtil jwtUtil;
 
     @Transactional(readOnly = false)
-    public CommentResponseDto createComment(Long todoId, CommentRequestDto requestDto) {
+    public CommentResponseDto createComment(Long todoId, CommentRequestDto requestDto, HttpServletRequest request) {
+        String token = jwtUtil.getJwtFromHeader(request);
+        User user = userService.findByUsername(jwtUtil.getUserInfoFromToken(token).getSubject());
         Todo todo = todoService.findTodoById(todoId);
-        Comment comment = new Comment(todo, requestDto);
+
+        Comment comment = new Comment(todo, requestDto, user);
 
         Comment saveComment = commentRepository.save(comment);
 
@@ -69,6 +76,7 @@ public class CommentService {
     }
 
     public String findCommentUsernameById(Long todoId, Long commentId) {
-        return commentRepository.findAllByIdAndTodoId(todoId, commentId).getUsername();
+        Comment comment = commentRepository.findAllByIdAndTodoId(commentId, todoId);
+        return comment.getUsername();
     }
 }

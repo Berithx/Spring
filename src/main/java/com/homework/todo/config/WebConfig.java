@@ -6,6 +6,7 @@ import com.homework.todo.filter.AuthorizationFilter;
 import com.homework.todo.filter.VerifyUserFilter;
 import com.homework.todo.jwt.JwtUtil;
 import com.homework.todo.service.CommentService;
+import com.homework.todo.service.TodoService;
 import com.homework.todo.service.UserService;
 import jakarta.servlet.Filter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -34,9 +35,9 @@ public class WebConfig {
     }
 
     @Bean
-    public FilterRegistrationBean Authorization(JwtUtil jwtUtil, CommentService commentService) {
+    public FilterRegistrationBean Authorization(JwtUtil jwtUtil, CommentService commentService, TodoService todoService) {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new AuthorizationFilter(jwtUtil, commentService));
+        filterRegistrationBean.setFilter(new AuthorizationFilter(jwtUtil, commentService, todoService));
         filterRegistrationBean.setOrder(3);
         filterRegistrationBean.addUrlPatterns("/*");
         return filterRegistrationBean;

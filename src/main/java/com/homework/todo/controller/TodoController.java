@@ -4,6 +4,7 @@ import com.homework.todo.dto.TodoRequestDto;
 import com.homework.todo.dto.TodoResponseDto;
 import com.homework.todo.dto.ValidationGroups;
 import com.homework.todo.service.TodoService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -23,8 +24,8 @@ public class TodoController {
     }
 
     @PostMapping
-    public TodoResponseDto createTodo(@Validated(ValidationGroups.Create.class) @RequestBody TodoRequestDto requestDto) {
-        return todoService.createTodo(requestDto);
+    public TodoResponseDto createTodo(@Validated(ValidationGroups.Create.class) @RequestBody TodoRequestDto requestDto, HttpServletRequest request) {
+        return todoService.createTodo(requestDto, request);
     }
 
     @GetMapping(value = {"/query/{id}", "/query", "/query/"})
@@ -38,13 +39,13 @@ public class TodoController {
     }
 
     @PutMapping()
-    public TodoResponseDto updateTodo(@Validated @RequestParam @Positive Long id, @Validated(ValidationGroups.Update.class) @RequestBody TodoRequestDto requestDto) {
-            return todoService.updateTodo(id, requestDto);
+    public TodoResponseDto updateTodo(@Validated @RequestParam @Positive Long id, @Validated(ValidationGroups.Update.class) @RequestBody TodoRequestDto requestDto, HttpServletRequest request) {
+            return todoService.updateTodo(id, requestDto, request);
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteTodo(@Validated @RequestParam @Positive Long id, @Validated(ValidationGroups.Delete.class) @RequestBody TodoRequestDto requestDto) {
-            todoService.deleteTodo(id, requestDto);
+    public ResponseEntity<String> deleteTodo(@Validated @RequestParam @Positive Long id, @Validated(ValidationGroups.Delete.class) @RequestBody TodoRequestDto requestDto, HttpServletRequest request) {
+            todoService.deleteTodo(id, requestDto, request);
             return ResponseEntity.ok("정상 삭제 처리되었습니다.");
     }
 }
