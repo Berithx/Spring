@@ -58,7 +58,7 @@ public class TodoService {
      * @param id RequestDto 의 id
      * @return 단일 객체 Get
      */
-    private Todo findTodoById(Long id) {
+    protected Todo findTodoById(Long id) {
         Todo todo = todoRepository.findById(id).orElseThrow(
                 () -> new NoSuchElementException("존재하지 않는 일정입니다.")
         );

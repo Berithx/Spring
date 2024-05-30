@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -89,6 +90,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MissingPathVariableException.class)
     public ResponseEntity<String> handleMissingPathVariableException(MissingPathVariableException ex) {
         return new ResponseEntity<>("요청 URL에 "+ ex.getParameter().getParameterName() + "이(가) 입력되지 않았습니다. 확인 후 재요청해주시기 바랍니다.", HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Todo : 단일 조회, 수정, 삭제 객체 API
+     * PathVariable 을 통하여 전달된 ID 값이 null 인 경우 예외처리
+     */
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<String> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
+        return new ResponseEntity<>("요청 URL에 "+ ex.getParameterName() + "이(가) 입력되지 않았습니다. 확인 후 재요청해주시기 바랍니다.", HttpStatus.BAD_REQUEST);
     }
 
     /**

@@ -18,6 +18,6 @@ public class CommentResponseDto {
         this.comment = comment.getComment();
         this.username = comment.getUsername();
         this.createAt = comment.getCreatedAt();
-        this.todoId = comment.getTodoId();
+        this.todoId = comment.getTodo().getId();
     }
 }

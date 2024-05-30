@@ -22,13 +22,14 @@ public class Comment extends Date {
     @Column(name = "username", nullable = false, length = 50)
     private String username;
 
-    @Column(name = "todoId", nullable = false)
-    private Long todoId;
+    @ManyToOne
+    @JoinColumn(name = "todo_Id", nullable = false)
+    private Todo todo;
 
-    public Comment(Long todoId, CommentRequestDto requestDto) {
-        this.todoId = todoId;
+    public Comment(Todo todo, CommentRequestDto requestDto) {
         this.comment = requestDto.getComment();
         this.username = requestDto.getUsername();
+        this.todo = todo;
     }
 
     public void update(CommentRequestDto requestDto) {

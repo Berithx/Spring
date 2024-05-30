@@ -3,6 +3,7 @@ package com.homework.todo.service;
 import com.homework.todo.dto.CommentRequestDto;
 import com.homework.todo.dto.CommentResponseDto;
 import com.homework.todo.entity.Comment;
+import com.homework.todo.entity.Todo;
 import com.homework.todo.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,8 @@ public class CommentService {
 
     @Transactional(readOnly = false)
     public CommentResponseDto createComment(Long todoId, CommentRequestDto requestDto) {
-        todoService.existsById(todoId);
-        Comment comment = new Comment(todoId, requestDto);
+        Todo todo = todoService.findTodoById(todoId);
+        Comment comment = new Comment(todo, requestDto);
 
         Comment saveComment = commentRepository.save(comment);
 
