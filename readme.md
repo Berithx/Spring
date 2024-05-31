@@ -8,7 +8,6 @@
 이 서버는 IntelliJ를 사용하여 개발되었으며, 데이터베이스는 MySQL를 사용합니다.
 
 <br>
-
 ## ■ Tech
 - **IDE** : IntelliJ IDEA
 - **언어** : JAVA
@@ -16,6 +15,8 @@
 - **DB** : MySQL 8.0
 - **Framework** : SpirngBoot 3.1.0
 
+<datalist>
+<summary>입문 주차 ver.1</summary>
 ## ■ Feature
 1. **Todo 등록**
     - 사용자는 제목, 내용, 담당자, 비밀번호를 입력하여 Todo를 등록할 수 있습니다.
@@ -40,5 +41,4 @@
 
 ## ■ API 명세서
 <img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2Fb79426fd-1e8d-4e04-9d14-1242be1166ae%2F%25EC%258A%25A4%25ED%2581%25AC%25EB%25A6%25B0%25EC%2583%25B7_2024-05-17_112010.png?table=block&id=5b00f43c-10f2-424c-8461-a2f9f4e6010d&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&width=2000&userId=81832d12-bc15-4ae9-a090-4b1b1ca1bbe6&cache=v2">
-
-
+</datalist>

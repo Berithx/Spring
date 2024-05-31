@@ -5,6 +5,7 @@ import com.homework.todo.dto.CommentResponseDto;
 import com.homework.todo.dto.ValidationGroups;
 import com.homework.todo.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,6 @@ public class CommentController {
     @DeleteMapping("/query/{todoId}/comments/{commentId}")
     public ResponseEntity<String> deleteComment(@Validated @PathVariable @Positive Long todoId, @Validated @PathVariable @Positive Long commentId) {
             commentService.deleteComment(todoId, commentId);
-            return ResponseEntity.ok("정상 삭제처리 되었습니다.");
+            return ResponseEntity.ok("정상 삭제 처리되었습니다.");
     }
 }

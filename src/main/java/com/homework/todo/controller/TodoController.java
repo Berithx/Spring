@@ -38,7 +38,7 @@ public class TodoController {
         return todoService.getTodo();
     }
 
-    @PutMapping()
+    @PutMapping
     public TodoResponseDto updateTodo(@Validated @RequestParam @Positive Long id, @Validated(ValidationGroups.Update.class) @RequestBody TodoRequestDto requestDto, HttpServletRequest request) {
             return todoService.updateTodo(id, requestDto, request);
     }
