@@ -23,9 +23,6 @@ public class Comment extends Date {
     @JoinColumn(name = "todo_Id", nullable = false)
     private Todo todo;
 
-    @Column(name = "username", nullable = false, length = 10)
-    private String username;
-
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -36,7 +33,6 @@ public class Comment extends Date {
         this.comment = requestDto.getComment();
         this.todo = todo;
         this.user = user;
-        this.username = user.getUsername();
     }
 
     public void update(CommentRequestDto requestDto) {

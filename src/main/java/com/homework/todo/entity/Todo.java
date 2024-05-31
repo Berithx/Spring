@@ -24,9 +24,6 @@ public class Todo extends Date{
     @Column(name = "contents", length = 500)
     private String contents;
 
-    @Column(name = "username")
-    private String username;
-
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -34,7 +31,6 @@ public class Todo extends Date{
     public Todo(TodoRequestDto todoRequestDto, User user) {
         this.title = todoRequestDto.getTitle();
         this.contents = todoRequestDto.getContents();
-        this.username = user.getUsername();
         this.user = user;
     }
 

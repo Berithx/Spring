@@ -77,6 +77,6 @@ public class CommentService {
 
     public String findCommentUsernameById(Long todoId, Long commentId) {
         Comment comment = commentRepository.findAllByIdAndTodoId(commentId, todoId);
-        return comment.getUsername();
+        return comment.getUser().getUsername();
     }
 }
