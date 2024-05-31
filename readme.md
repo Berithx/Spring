@@ -8,6 +8,7 @@
 이 서버는 IntelliJ를 사용하여 개발되었으며, 데이터베이스는 MySQL를 사용합니다.
 
 <br>
+
 ## ■ Tech
 - **IDE** : IntelliJ IDEA
 - **언어** : JAVA
