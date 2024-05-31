@@ -90,7 +90,7 @@
 <img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2F8fa63813-e153-4158-8b07-e667fee25fa9%2FUntitled.png?table=block&id=658696bb-c0cd-4859-9aad-b667dc6fa08e&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&width=1060&userId=81832d12-bc15-4ae9-a090-4b1b1ca1bbe6&cache=v2">
 
 ## ■ ERD
-<img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2F5883d5d1-18f6-453c-bf14-6d2d417f7fbf%2FUntitled.png?table=block&id=05107942-1a0e-4f69-8415-5d668b14375e&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&width=2000&userId=81832d12-bc15-4ae9-a090-4b1b1ca1bbe6&cache=v2">
+<img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2F66165377-798d-454e-9898-ce492e45432a%2F%25EC%258A%25A4%25ED%2581%25AC%25EB%25A6%25B0%25EC%2583%25B7_2024-05-31_144137.png?table=block&id=05107942-1a0e-4f69-8415-5d668b14375e&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&width=2000&userId=81832d12-bc15-4ae9-a090-4b1b1ca1bbe6&cache=v2">
 
 ## ■ API 명세서
 <img src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F83c75a39-3aba-4ba4-a792-7aefe4b07895%2Fa48f8ead-fdec-4286-85d0-cfbc01eb2fdd%2FUntitled.jpeg?table=block&id=e09f3550-0e9a-4629-a0df-b58f745eb487&spaceId=83c75a39-3aba-4ba4-a792-7aefe4b07895&width=2000&userId=81832d12-bc15-4ae9-a090-4b1b1ca1bbe6&cache=v2">
