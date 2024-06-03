@@ -24,8 +24,7 @@ public class CommentService {
     private final JwtUtil jwtUtil;
 
     @Transactional(readOnly = false)
-    public CommentResponseDto createComment(Long todoId, CommentRequestDto requestDto, HttpServletRequest request) {
-        String token = jwtUtil.getJwtFromHeader(request);
+    public CommentResponseDto createComment(Long todoId, CommentRequestDto requestDto, String token) {
         User user = userService.findByUsername(jwtUtil.getUserInfoFromToken(token).getSubject());
         Todo todo = todoService.findTodoById(todoId);
 

@@ -3,6 +3,7 @@ package com.homework.todo.controller;
 import com.homework.todo.dto.CommentRequestDto;
 import com.homework.todo.dto.CommentResponseDto;
 import com.homework.todo.dto.ValidationGroups;
+import com.homework.todo.jwt.JwtUtil;
 import com.homework.todo.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Positive;
@@ -20,10 +21,12 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping({"/query/{todoId}/comments", "/query//comments"})
     public ResponseEntity<CommentResponseDto> createComment(@PathVariable @Positive Long todoId, @Validated(ValidationGroups.Create.class) @RequestBody CommentRequestDto requestDto, HttpServletRequest request) {
-        CommentResponseDto responseDto = commentService.createComment(todoId, requestDto, request);
+        String token = jwtUtil.getJwtFromHeader(request);
+        CommentResponseDto responseDto = commentService.createComment(todoId, requestDto, token);
         return ResponseEntity.ok(responseDto);
     }
 

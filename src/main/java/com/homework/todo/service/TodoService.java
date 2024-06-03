@@ -23,9 +23,7 @@ public class TodoService {
 
 
     @Transactional(readOnly = false)
-    public TodoResponseDto createTodo(TodoRequestDto requestDto, HttpServletRequest request) {
-        String token = jwtUtil.getJwtFromHeader(request);
-
+    public TodoResponseDto createTodo(TodoRequestDto requestDto, String token) {
         User user = userService.findByUsername(jwtUtil.getUserInfoFromToken(token).getSubject());
 
         Todo todo = new Todo(requestDto, user);
@@ -47,8 +45,7 @@ public class TodoService {
     }
 
     @Transactional(readOnly = false)
-    public TodoResponseDto updateTodo(Long id, TodoRequestDto requestDto, HttpServletRequest request) {
-        String token = jwtUtil.getJwtFromHeader(request);
+    public TodoResponseDto updateTodo(Long id, TodoRequestDto requestDto, String token) {
         User user = userService.findByUsername(jwtUtil.getUserInfoFromToken(token).getSubject());
         Todo todo = findTodoById(id);
         todo.checkPassword(user);
@@ -57,8 +54,7 @@ public class TodoService {
     }
 
     @Transactional(readOnly = false)
-    public void deleteTodo(Long id, TodoRequestDto requestDto, HttpServletRequest request) {
-        String token = jwtUtil.getJwtFromHeader(request);
+    public void deleteTodo(Long id, TodoRequestDto requestDto, String token) {
         User user = userService.findByUsername(jwtUtil.getUserInfoFromToken(token).getSubject());
         Todo todo = findTodoById(id);
         todo.checkPassword(user);
