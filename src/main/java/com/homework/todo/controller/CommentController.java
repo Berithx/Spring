@@ -5,7 +5,6 @@ import com.homework.todo.dto.CommentResponseDto;
 import com.homework.todo.dto.ValidationGroups;
 import com.homework.todo.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,19 +22,21 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping({"/query/{todoId}/comments", "/query//comments"})
-    public CommentResponseDto createComment(@PathVariable @Positive Long todoId, @Validated(ValidationGroups.Create.class) @RequestBody CommentRequestDto requestDto, HttpServletRequest request) {
-            return commentService.createComment(todoId, requestDto, request);
+    public ResponseEntity<CommentResponseDto> createComment(@PathVariable @Positive Long todoId, @Validated(ValidationGroups.Create.class) @RequestBody CommentRequestDto requestDto, HttpServletRequest request) {
+        CommentResponseDto responseDto = commentService.createComment(todoId, requestDto, request);
+        return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping({"/query/{todoId}/comments", "/query//comments"})
-    public List<CommentResponseDto> getComment(@Validated @PathVariable @Positive Long todoId) {
-            return commentService.getComment(todoId);
-
+    public ResponseEntity<List<CommentResponseDto>> getComment(@Validated @PathVariable @Positive Long todoId) {
+        List<CommentResponseDto> responseList = commentService.getComment(todoId);
+        return ResponseEntity.ok(responseList);
     }
 
     @PutMapping({"/query/{todoId}/comments/{commentId}", "/query//comments", "/query//comments/"})
-    public CommentResponseDto updateComment(@Validated @PathVariable @Positive Long todoId, @Validated @PathVariable @Positive Long commentId, @Validated(ValidationGroups.Update.class) @RequestBody CommentRequestDto requestDto) {
-            return commentService.updateComment(todoId, commentId, requestDto);
+    public ResponseEntity<CommentResponseDto> updateComment(@Validated @PathVariable @Positive Long todoId, @Validated @PathVariable @Positive Long commentId, @Validated(ValidationGroups.Update.class) @RequestBody CommentRequestDto requestDto) {
+        CommentResponseDto responseDto = commentService.updateComment(todoId, commentId, requestDto);
+        return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping("/query/{todoId}/comments/{commentId}")

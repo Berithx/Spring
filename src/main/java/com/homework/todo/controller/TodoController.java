@@ -24,28 +24,32 @@ public class TodoController {
     }
 
     @PostMapping
-    public TodoResponseDto createTodo(@Validated(ValidationGroups.Create.class) @RequestBody TodoRequestDto requestDto, HttpServletRequest request) {
-        return todoService.createTodo(requestDto, request);
+    public ResponseEntity<TodoResponseDto> createTodo(@Validated(ValidationGroups.Create.class) @RequestBody TodoRequestDto requestDto, HttpServletRequest request) {
+        TodoResponseDto responseDto = todoService.createTodo(requestDto, request);
+        return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping(value = {"/query/{id}", "/query", "/query/"})
-    public TodoResponseDto getTodoById(@Validated @PathVariable @Positive Long id) {
-            return todoService.getTodoById(id);
+    public ResponseEntity<TodoResponseDto> getTodoById(@Validated @PathVariable @Positive Long id) {
+        TodoResponseDto responseDto = todoService.getTodoById(id);
+        return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping
-    public List<TodoResponseDto> getTodo() {
-        return todoService.getTodo();
+    public ResponseEntity<List<TodoResponseDto>> getTodo() {
+        List<TodoResponseDto> responseList = todoService.getTodo();
+        return ResponseEntity.ok(responseList);
     }
 
     @PutMapping
-    public TodoResponseDto updateTodo(@Validated @RequestParam @Positive Long id, @Validated(ValidationGroups.Update.class) @RequestBody TodoRequestDto requestDto, HttpServletRequest request) {
-            return todoService.updateTodo(id, requestDto, request);
+    public ResponseEntity<TodoResponseDto> updateTodo(@Validated @RequestParam @Positive Long id, @Validated(ValidationGroups.Update.class) @RequestBody TodoRequestDto requestDto, HttpServletRequest request) {
+        TodoResponseDto responseDto = todoService.updateTodo(id, requestDto, request);
+        return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping
     public ResponseEntity<String> deleteTodo(@Validated @RequestParam @Positive Long id, @Validated(ValidationGroups.Delete.class) @RequestBody TodoRequestDto requestDto, HttpServletRequest request) {
-            todoService.deleteTodo(id, requestDto, request);
-            return ResponseEntity.ok("정상 삭제 처리되었습니다.");
+        todoService.deleteTodo(id, requestDto, request);
+        return ResponseEntity.ok("정상 삭제 처리되었습니다.");
     }
 }
