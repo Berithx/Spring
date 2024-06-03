@@ -57,10 +57,11 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                 log.info("put, delete 확인");
                 User user = userService.findByUsername(jwtUtil.getUserInfoFromToken(token).getSubject());
 
-                if (user != null) {
-                    chain.doFilter(request, response);
+                if (user == null) {
+                    exceptionHandler.handleException(response, HttpStatus.UNAUTHORIZED, "유효하지 않은 사용자입니다.");
                 }
             }
+            chain.doFilter(request, response);
         } catch (UnsupportedJwtException | MalformedJwtException | io.jsonwebtoken.security.SignatureException e) {
             exceptionHandler.handleException(response, HttpStatus.BAD_REQUEST, "잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {

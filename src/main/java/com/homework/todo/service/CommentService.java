@@ -57,14 +57,14 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long todoId, Long commentId, String token) {
         if (!hasAccess(todoId, commentId, token)) {
-            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
+            throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
         Comment comment = findCommentById(todoId, commentId);
         commentRepository.delete(comment);
     }
 
     private boolean hasAccess(Long todoId, Long commentId, String token) {
-        String commentUsername = findCommentById(commentId, todoId).getUser().getUsername();
+        String commentUsername = findCommentById(todoId, commentId).getUser().getUsername();
         return commentUsername.equals(jwtUtil.getUserInfoFromToken(token).getSubject());
     }
 
