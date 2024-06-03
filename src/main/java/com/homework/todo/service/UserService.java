@@ -9,6 +9,7 @@ import com.homework.todo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -47,7 +48,13 @@ public class UserService {
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("회원을 찾을 수 없습니다.")
+                () -> new NoSuchElementException("회원을 찾을 수 없습니다.")
+        );
+    }
+
+    public User findUserByToken(String token) {
+        return userRepository.findByUsername(jwtUtil.getUserInfoFromToken(token).getSubject()).orElseThrow(
+                () -> new NoSuchElementException("회원을 찾을 수 없습니다")
         );
     }
 }

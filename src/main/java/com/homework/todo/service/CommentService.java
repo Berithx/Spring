@@ -37,13 +37,13 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public List<CommentResponseDto> getComment(Long todoId) {
-        existsByTodoId(todoId);
+        todoService.existsById(todoId);
         return commentRepository.findAllByTodoIdOrderById(todoId).stream().map(CommentResponseDto::new).toList();
     }
 
     @Transactional
     public CommentResponseDto updateComment(Long todoId, Long commentId, CommentRequestDto requestDto) {
-        existsByTodoId(todoId);
+        todoService.existsById(todoId);
         Comment comment = findCommentById(todoId, commentId);
         if (comment != null) {
             comment.update(requestDto);
@@ -55,18 +55,12 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(Long todoId, Long commentId) {
-        existsByTodoId(todoId);
+        todoService.existsById(todoId);
         Comment comment = findCommentById(todoId, commentId);
         if (comment != null) {
             commentRepository.delete(comment);
         } else {
             throw new NoSuchElementException("삭제하려는 댓글이 존재하지 않습니다.");
-        }
-    }
-
-    private void existsByTodoId(Long todoId) {
-        if (!todoService.existsById(todoId)) {
-            throw new NoSuchElementException("존재하지 않는 일정입니다.");
         }
     }
 

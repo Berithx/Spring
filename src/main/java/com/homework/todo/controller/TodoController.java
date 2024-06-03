@@ -52,7 +52,7 @@ public class TodoController {
     @DeleteMapping
     public ResponseEntity<String> deleteTodo(@Validated @RequestParam @Positive Long id, @Validated(ValidationGroups.Delete.class) @RequestBody TodoRequestDto requestDto, HttpServletRequest request) {
         String token = jwtUtil.getJwtFromHeader(request);
-        todoService.deleteTodo(id, requestDto, token);
+        todoService.deleteTodo(id, token);
         return ResponseEntity.ok("정상 삭제 처리되었습니다.");
     }
 }

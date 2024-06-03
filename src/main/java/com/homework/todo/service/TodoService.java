@@ -46,18 +46,16 @@ public class TodoService {
 
     @Transactional
     public TodoResponseDto updateTodo(Long id, TodoRequestDto requestDto, String token) {
-        User user = userService.findByUsername(jwtUtil.getUserInfoFromToken(token).getSubject());
         Todo todo = findTodoById(id);
-        todo.checkPassword(user);
+        todo.checkPassword(userService.findUserByToken(token));
         todo.update(requestDto);
         return new TodoResponseDto(todo);
     }
 
     @Transactional
-    public void deleteTodo(Long id, TodoRequestDto requestDto, String token) {
-        User user = userService.findByUsername(jwtUtil.getUserInfoFromToken(token).getSubject());
+    public void deleteTodo(Long id, String token) {
         Todo todo = findTodoById(id);
-        todo.checkPassword(user);
+        todo.checkPassword(userService.findUserByToken(token));
         todoRepository.delete(todo);
     }
 
@@ -73,8 +71,9 @@ public class TodoService {
         return todo;
     }
 
-    protected boolean existsById(Long id) {
-
-        return todoRepository.existsById(id);
+     protected void existsById(Long id) {
+        if (!todoRepository.existsById(id)) {
+            throw new NoSuchElementException("존재하지 않는 일정입니다.");
+        }
     }
 }
