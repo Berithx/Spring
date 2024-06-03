@@ -1,9 +1,7 @@
 package com.homework.todo.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homework.todo.filter.AuthenticationFilter;
 import com.homework.todo.filter.AuthorizationFilter;
-import com.homework.todo.filter.VerifyUserFilter;
 import com.homework.todo.jwt.JwtUtil;
 import com.homework.todo.service.CommentService;
 import com.homework.todo.service.TodoService;
@@ -17,19 +15,10 @@ import org.springframework.context.annotation.Configuration;
 public class WebConfig {
 
     @Bean
-    public FilterRegistrationBean verifyUserFilter(ObjectMapper mapper, UserService userService) {
-        FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new VerifyUserFilter(mapper, userService));
-        filterRegistrationBean.setOrder(1);
-        filterRegistrationBean.addUrlPatterns("/user/login");
-        return filterRegistrationBean;
-    }
-
-    @Bean
     public FilterRegistrationBean AuthenticationFilter(UserService userService, JwtUtil jwtUtil) {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(new AuthenticationFilter(userService, jwtUtil));
-        filterRegistrationBean.setOrder(2);
+        filterRegistrationBean.setOrder(1);
         filterRegistrationBean.addUrlPatterns("/user/login");
         return filterRegistrationBean;
     }
@@ -38,7 +27,7 @@ public class WebConfig {
     public FilterRegistrationBean Authorization(JwtUtil jwtUtil, CommentService commentService, TodoService todoService) {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(new AuthorizationFilter(jwtUtil, commentService, todoService));
-        filterRegistrationBean.setOrder(3);
+        filterRegistrationBean.setOrder(2);
         filterRegistrationBean.addUrlPatterns("/*");
         return filterRegistrationBean;
     }

@@ -1,6 +1,5 @@
 package com.homework.todo.service;
 
-import com.homework.todo.dto.LoginRequestDto;
 import com.homework.todo.dto.SignupRequestDto;
 import com.homework.todo.entity.User;
 import com.homework.todo.entity.UserRoleEnum;
@@ -39,11 +38,6 @@ public class UserService {
 
         User user = new User(username, requestDto.getNickname(), requestDto.getPassword(), role);
         userRepository.save(user);
-    }
-
-    public boolean verifyUser(LoginRequestDto requestDto) {
-        User user = findByUsername(requestDto.getUsername());
-        return user != null && user.checkPassword(requestDto.getPassword());
     }
 
     public User findByUsername(String username) {
