@@ -22,7 +22,7 @@ public class TodoService {
     private final JwtUtil jwtUtil;
 
 
-    @Transactional(readOnly = false)
+    @Transactional
     public TodoResponseDto createTodo(TodoRequestDto requestDto, String token) {
         User user = userService.findByUsername(jwtUtil.getUserInfoFromToken(token).getSubject());
 
@@ -44,7 +44,7 @@ public class TodoService {
         return todoRepository.findAllByOrderByCreatedAtDesc().stream().map(TodoResponseDto::new).toList();
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public TodoResponseDto updateTodo(Long id, TodoRequestDto requestDto, String token) {
         User user = userService.findByUsername(jwtUtil.getUserInfoFromToken(token).getSubject());
         Todo todo = findTodoById(id);
@@ -53,7 +53,7 @@ public class TodoService {
         return new TodoResponseDto(todo);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void deleteTodo(Long id, TodoRequestDto requestDto, String token) {
         User user = userService.findByUsername(jwtUtil.getUserInfoFromToken(token).getSubject());
         Todo todo = findTodoById(id);
@@ -74,6 +74,7 @@ public class TodoService {
     }
 
     protected boolean existsById(Long id) {
+
         return todoRepository.existsById(id);
     }
 }

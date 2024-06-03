@@ -23,7 +23,7 @@ public class CommentService {
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
-    @Transactional(readOnly = false)
+    @Transactional
     public CommentResponseDto createComment(Long todoId, CommentRequestDto requestDto, String token) {
         User user = userService.findByUsername(jwtUtil.getUserInfoFromToken(token).getSubject());
         Todo todo = todoService.findTodoById(todoId);
@@ -41,7 +41,7 @@ public class CommentService {
         return commentRepository.findAllByTodoIdOrderById(todoId).stream().map(CommentResponseDto::new).toList();
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public CommentResponseDto updateComment(Long todoId, Long commentId, CommentRequestDto requestDto) {
         existsByTodoId(todoId);
         Comment comment = findCommentById(todoId, commentId);
@@ -53,7 +53,7 @@ public class CommentService {
         }
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void deleteComment(Long todoId, Long commentId) {
         existsByTodoId(todoId);
         Comment comment = findCommentById(todoId, commentId);
