@@ -24,9 +24,9 @@ public class WebConfig {
     }
 
     @Bean
-    public FilterRegistrationBean Authorization(JwtUtil jwtUtil, CommentService commentService, TodoService todoService) {
+    public FilterRegistrationBean Authorization(JwtUtil jwtUtil, UserService userService) {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-        filterRegistrationBean.setFilter(new AuthorizationFilter(jwtUtil, commentService, todoService));
+        filterRegistrationBean.setFilter(new AuthorizationFilter(jwtUtil, userService));
         filterRegistrationBean.setOrder(2);
         filterRegistrationBean.addUrlPatterns("/*");
         return filterRegistrationBean;

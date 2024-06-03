@@ -6,7 +6,6 @@ import com.homework.todo.entity.Todo;
 import com.homework.todo.entity.User;
 import com.homework.todo.jwt.JwtUtil;
 import com.homework.todo.repository.TodoRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +45,9 @@ public class TodoService {
 
     @Transactional
     public TodoResponseDto updateTodo(Long id, TodoRequestDto requestDto, String token) {
+        if (!hasAccess(id, token)) {
+            throw new IllegalArgumentException("작성자만 수정할 수 있습니다");
+        }
         Todo todo = findTodoById(id);
         todo.checkPassword(userService.findUserByToken(token));
         todo.update(requestDto);
@@ -54,9 +56,17 @@ public class TodoService {
 
     @Transactional
     public void deleteTodo(Long id, String token) {
+        if (!hasAccess(id, token)) {
+            throw new IllegalArgumentException("작성자만 삭제할 수 있습니다");
+        }
         Todo todo = findTodoById(id);
         todo.checkPassword(userService.findUserByToken(token));
         todoRepository.delete(todo);
+    }
+
+    private boolean hasAccess(Long id, String token) {
+        String todoUsername = findTodoById(id).getUser().getUsername();
+        return todoUsername.equals(jwtUtil.getUserInfoFromToken(token).getSubject());
     }
 
     /**

@@ -1,9 +1,9 @@
 package com.homework.todo.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.homework.todo.entity.User;
 import com.homework.todo.jwt.JwtUtil;
-import com.homework.todo.service.CommentService;
-import com.homework.todo.service.TodoService;
+import com.homework.todo.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -18,7 +18,6 @@ import org.springframework.util.PatternMatchUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 @Slf4j(topic = "JWT 검증 및 인가")
 @RequiredArgsConstructor
@@ -26,8 +25,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
     private final String[] whiteList = new String[] {"/user/signup", "/user/login"};
 
     private final JwtUtil jwtUtil;
-    private final CommentService commentService;
-    private final TodoService todoService;
+    private final UserService userService;
     private final FilterExceptionHandler exceptionHandler = new FilterExceptionHandler(new ObjectMapper());
 
     @Override
@@ -56,34 +54,13 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
             // 수정, 삭제 권한 확인
             if (request.getMethod().equals("PUT") || request.getMethod().equals("DELETE")) {
-                String tokenUsername = jwtUtil.getUserInfoFromToken(token).getSubject();
-                log.info(tokenUsername);
-                // Todo 접근
-                if (request.getRequestURI().equals("/todos")) {
-                    String todoUsername = todoService.getTodoById(Long.valueOf(request.getParameter("id"))).getUsername();
-                    log.info(todoUsername);
-                    if (!tokenUsername.equals(todoUsername)) {
-                        exceptionHandler.handleException(response, HttpStatus.BAD_REQUEST, "작성자만 삭제/수정할 수 있습니다.");
-                        return;
-                    }
-                }
+                log.info("put, delete 확인");
+                User user = userService.findByUsername(jwtUtil.getUserInfoFromToken(token).getSubject());
 
-                // Comment 접근
-                if (request.getRequestURI().startsWith("/todos/query")) {
-                    String[] uriParts = request.getRequestURI().split("/");
-
-                    Long todoId = Long.parseLong(uriParts[uriParts.length - 3]);
-                    Long commentId = Long.parseLong(uriParts[uriParts.length -1]);
-                    String commentUsername = commentService.findCommentUsernameById(todoId, commentId);
-                    log.info(commentUsername);
-                    if (!tokenUsername.equals(commentUsername)) {
-                        exceptionHandler.handleException(response, HttpStatus.BAD_REQUEST, "작성자만 삭제/수정할 수 있습니다.");
-                        return;
-                    }
+                if (user != null) {
+                    chain.doFilter(request, response);
                 }
             }
-
-            chain.doFilter(request, response);
         } catch (UnsupportedJwtException | MalformedJwtException | io.jsonwebtoken.security.SignatureException e) {
             exceptionHandler.handleException(response, HttpStatus.BAD_REQUEST, "잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
@@ -94,13 +71,11 @@ public class AuthorizationFilter extends OncePerRequestFilter {
     }
 
     private boolean whiteListCheck (String uri) {
-        boolean test = PatternMatchUtils.simpleMatch(whiteList, uri);
         return PatternMatchUtils.simpleMatch(whiteList, uri);
     }
 
     private boolean isContainToken(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
-        boolean test = authorization != null && authorization.startsWith("Bearer ");
         return authorization != null && authorization.startsWith("Bearer ");
     }
 }

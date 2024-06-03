@@ -7,7 +7,6 @@ import com.homework.todo.entity.Todo;
 import com.homework.todo.entity.User;
 import com.homework.todo.jwt.JwtUtil;
 import com.homework.todo.repository.CommentRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,8 +41,10 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto updateComment(Long todoId, Long commentId, CommentRequestDto requestDto) {
-        todoService.existsById(todoId);
+    public CommentResponseDto updateComment(Long todoId, Long commentId, CommentRequestDto requestDto, String token) {
+        if (!hasAccess(todoId, commentId, token)) {
+            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
+        }
         Comment comment = findCommentById(todoId, commentId);
         if (comment != null) {
             comment.update(requestDto);
@@ -54,22 +55,22 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long todoId, Long commentId) {
-        todoService.existsById(todoId);
-        Comment comment = findCommentById(todoId, commentId);
-        if (comment != null) {
-            commentRepository.delete(comment);
-        } else {
-            throw new NoSuchElementException("삭제하려는 댓글이 존재하지 않습니다.");
+    public void deleteComment(Long todoId, Long commentId, String token) {
+        if (!hasAccess(todoId, commentId, token)) {
+            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
         }
+        Comment comment = findCommentById(todoId, commentId);
+        commentRepository.delete(comment);
+    }
+
+    private boolean hasAccess(Long todoId, Long commentId, String token) {
+        String commentUsername = findCommentById(commentId, todoId).getUser().getUsername();
+        return commentUsername.equals(jwtUtil.getUserInfoFromToken(token).getSubject());
     }
 
     private Comment findCommentById(Long todoId, Long commentId) {
-        return commentRepository.findAllByIdAndTodoId(commentId, todoId);
-    }
-
-    public String findCommentUsernameById(Long todoId, Long commentId) {
-        Comment comment = commentRepository.findAllByIdAndTodoId(commentId, todoId);
-        return comment.getUser().getUsername();
+        return commentRepository.findAllByIdAndTodoId(commentId, todoId).orElseThrow(
+                () -> new NoSuchElementException("삭제하려는 댓글이 존재하지 않습니다.")
+        );
     }
 }
